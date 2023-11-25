@@ -3,7 +3,7 @@ title: "ERROR ITMS-90165 でApp Store Connectへアップロードできなく�
 emoji: "🍎"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ios", "appstoreconnect"]
-published: false
+published: true
 ---
 
 ## 現象
