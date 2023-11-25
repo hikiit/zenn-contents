@@ -3,7 +3,7 @@ title: "Kotlin Callback形式のコードはCoroutine形式にラップしよう
 emoji: "🔁"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["kotlin"]
-published: true
+published: false
 ---
 
 ## 本記事の目的

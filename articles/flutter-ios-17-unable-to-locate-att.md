@@ -3,7 +3,7 @@ title: "Flutter iOS17 「ATTのダイアログを表示していない」とリ�
 emoji: "🍎"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "ios", "appstoreconnect"]
-published: true
+published: false
 ---
 
 ## 環境

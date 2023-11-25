@@ -3,7 +3,7 @@ title: "Git 全コミットのAuthor/Committerを書き換える方法"
 emoji: "📘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["git"]
-published: true
+published: false
 ---
 
 ## filter-branch を利用する
