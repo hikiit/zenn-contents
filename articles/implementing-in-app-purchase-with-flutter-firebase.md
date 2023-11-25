@@ -3,8 +3,11 @@ title: "Flutter + FirebaseでiOSとAndroidの定期購入(サブスク)を実装
 emoji: "🪙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["flutter", "firebase", "cloudfunctions"]
-published: false
+published: true
 ---
+
+>本記事は、以前(2021年8月)に書いた記事の再投稿になります。
+>情報が古いことがありますので、お気をつけください。
 
 ## はじめに
 
@@ -146,7 +149,7 @@ Flutter アプリが直接ストアに問い合わせてストア情報を取得
 ```dart
 class BillingService extends StateNotifier<bool> {
 
-  // 略
+  // ...
 
   final InAppPurchase _connection = InAppPurchase.instance;
 
@@ -227,8 +230,8 @@ class BillingService extends StateNotifier<bool> {
   bool _isBillingUser = true;
   List<String> _productIds = <String>[
     Platform.isIOS
-        ? 'app.histbet.histbet.subscription.monthly.pro'
-        : 'app.histbet.subscription.monthly.pro'
+        ? 'com.sample.subscription.monthly'
+        : 'com.sample.subscription.monthly'
   ];
 
   ProductDetails? _product; // 現在課金アイテムは1種類
@@ -239,7 +242,7 @@ class BillingService extends StateNotifier<bool> {
 
   /// ストア情報の初期化を行う
   Future _initStoreStatus() async {
-    // 省略
+    // ...
   }
 
   /// サブスクの購入を実行する
@@ -270,7 +273,7 @@ class BillingService extends StateNotifier<bool> {
             {'data': purchaseDetails.verificationData.localVerificationData});
 
         print("Verify Purchase RESULT: " + result.data.toString());
-        return result.data[BillingConst.result];
+        return result.data[BillingStatus.result];
       }
       // Androidのレシート検証
       else if (Platform.isAndroid) {
@@ -285,12 +288,12 @@ class BillingService extends StateNotifier<bool> {
           });
 
           print("Verify Purchase RESULT: " + result.data.toString());
-          return result.data[BillingConst.result];
+          return result.data[BillingStatus.result];
         }
       }
-      return BillingConst.UNEXPECTED_ERROR;
+      return BillingStatus.UNEXPECTED_ERROR;
     } catch (_) {
-      return BillingConst.UNEXPECTED_ERROR;
+      return BillingStatus.UNEXPECTED_ERROR;
     }
   }
 
@@ -316,7 +319,7 @@ class BillingService extends StateNotifier<bool> {
         // PurchaseStatus.purchased
         else if (purchaseDetails.status == PurchaseStatus.purchased) {
           final result = await _verifyPurchase(purchaseDetails);
-          if (result == BillingConst.SUCCESS) {
+          if (result == BillingStatus.SUCCESS) {
             _isBillingUser = true;
           }
         }
@@ -324,7 +327,7 @@ class BillingService extends StateNotifier<bool> {
         // PurchaseStatus.restored
         else if (purchaseDetails.status == PurchaseStatus.restored) {
           final result = await _verifyPurchase(purchaseDetails);
-          if (result == BillingConst.SUCCESS) {
+          if (result == BillingStatus.SUCCESS) {
             _isBillingUser = true;
           }
         }
@@ -343,7 +346,7 @@ class BillingService extends StateNotifier<bool> {
   }
 }
 
-class BillingConst {
+class BillingStatus {
   static const String result = 'result';
   static const SUCCESS = 0; // 成功 (期限内)
   static const EXPIRED = 1; // 期限切れ
@@ -410,7 +413,7 @@ class BillingConst {
         // PurchaseStatus.purchased
         else if (purchaseDetails.status == PurchaseStatus.purchased) {
           final result = await _verifyPurchase(purchaseDetails);
-          if (result == BillingConst.SUCCESS) {
+          if (result == BillingStatus.SUCCESS) {
             _isBillingUser = true;
           }
         }
@@ -418,7 +421,7 @@ class BillingConst {
         // PurchaseStatus.restored
         else if (purchaseDetails.status == PurchaseStatus.restored) {
           final result = await _verifyPurchase(purchaseDetails);
-          if (result == BillingConst.SUCCESS) {
+          if (result == BillingStatus.SUCCESS) {
             _isBillingUser = true;
           }
         }
@@ -451,7 +454,7 @@ class BillingConst {
             {'data': purchaseDetails.verificationData.localVerificationData});
 
         print("Verify Purchase RESULT: " + result.data.toString());
-        return result.data[BillingConst.result];
+        return result.data[BillingStatus.result];
       }
       // Androidのレシート検証
       else if (Platform.isAndroid) {
@@ -466,12 +469,12 @@ class BillingConst {
           });
 
           print("Verify Purchase RESULT: " + result.data.toString());
-          return result.data[BillingConst.result];
+          return result.data[BillingStatus.result];
         }
       }
-      return BillingConst.UNEXPECTED_ERROR;
+      return BillingStatus.UNEXPECTED_ERROR;
     } catch (_) {
-      return BillingConst.UNEXPECTED_ERROR;
+      return BillingStatus.UNEXPECTED_ERROR;
     }
   }
 ```
@@ -576,12 +579,17 @@ export const verifyAndroid = functions
       .where("orderId", "==", latestReceipt["orderId"])
       .get();
 
+    // 例として、ここでは購入情報が他のアカウントに登録済みの時は失敗としていますが、
+    // アカウント作り直しのケースなども考えると、既存のものから購入情報を移行したり、重複を許容したりすることを考える必要があります。
     if (!queryId.empty) {
       return { result: ALREADY_EXIST };
     }
 
-    // TODO Firestoreに保存する
-    // 最低限最新レシートを保存しておけばいいと思います
+    /**
+     * TODO
+     * ここでFirestoreに保存する処理を書いてください
+     * 最低限最新レシートを保存しておけばいいと思います
+     */
 
     const now: number = Date.now();
     const expireDate: number = Number(latestReceipt["expiryTimeMillis"]);
@@ -814,24 +822,24 @@ iOS についてのドキュメントを見つけることはできませんで�
 ```dart
 class BillingService extends StateNotifier<bool> {
   BillingService() : super(false) {
-    // 略
+    // ...
   }
 
-  // 略
+  // ...
 
   /// ストア情報の初期化を行う
   Future _initStoreStatus() async {
-    // 略
+    // ...
   }
 
   /// サブスクの購入を実行する
   Future<void> buyNonConsumable() async {
-    // 略
+    // ...
   }
 
   /// CloudFunctions経由でレシート検証, 期限検証, (検証成功であれば)Firestoreへレシート登録を行う
   Future<int> _verifyPurchase(PurchaseDetails purchaseDetails) async {
-    // 略
+    // ...
   }
 
   /// restorePurchaseを実行するとbuyNonConsumableと同じようにpurchaseStreamが走る
@@ -864,7 +872,7 @@ class BillingService extends StateNotifier<bool> {
         // PurchaseStatus.purchased
         else if (purchaseDetails.status == PurchaseStatus.purchased) {
           final result = await _verifyPurchase(purchaseDetails);
-          if (result == BillingConst.SUCCESS) {
+          if (result == BillingStatus.SUCCESS) {
             _isBillingUser = true;
           }
         }
@@ -872,7 +880,7 @@ class BillingService extends StateNotifier<bool> {
         // PurchaseStatus.restored
         else if (purchaseDetails.status == PurchaseStatus.restored) {
           final result = await _verifyPurchase(purchaseDetails);
-          if (result == BillingConst.SUCCESS) {
+          if (result == BillingStatus.SUCCESS) {
             _isBillingUser = true;
           }
         }
