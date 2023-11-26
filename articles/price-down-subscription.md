@@ -3,7 +3,7 @@ title: "Android iOS サブスクリプション価格を値下げする"
 emoji: "🪙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Android", "iOS"]
-published: false
+published: true
 ---
 
 ## サブスクリプション(定期購読)価格の値下げ方法
