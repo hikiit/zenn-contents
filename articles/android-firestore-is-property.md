@@ -3,7 +3,7 @@ title: "Android Firestoreでdata class利用時、プロパティ名にisを付�
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Android", "Kotlin", "Firestore"]
-published: false
+published: true
 ---
 
 プロパティ名に`isFoo`と名づけることは珍しくないと思いますが、Firestore を利用する際には注意が必要です。
