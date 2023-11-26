@@ -3,7 +3,7 @@ title: "Flutter 等幅フォントをText Widget単位で指定する方法"
 emoji: "🔤"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter"]
-published: false
+published: true
 ---
 
 ## fontFeatures を指定する
